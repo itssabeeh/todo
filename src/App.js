@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 function App() {
   return (
     <div className="App">
-      <Button variant="contained">click me</Button>
+      <Button variant="contained">click</Button>
     </div>
   );
 }
