@@ -8,30 +8,10 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Item from "./Item";
 import AddIcon from "@mui/icons-material/Add";
+import { UserContext } from "../Context";
 
 const ListContainer = () => {
-  const data = [
-    "buy food",
-    "cook",
-    "get grocery",
-    "buy food",
-    "cook",
-    "get grocery",
-    "buy food",
-    "cook",
-    "get grocery",
-    "buy food",
-    "cook",
-    "get grocery",
-    "buy food",
-    "cook",
-    "buy food",
-    "cook",
-    "get grocery",
-    "buy food",
-    "cook",
-    "get grocery",
-  ];
+  const { toDoList } = React.useContext(UserContext);
   return (
     // <Box
     //   display="flex"
@@ -124,8 +104,8 @@ const ListContainer = () => {
     <>
       <Box sx={{ flexGrow: 1, p: 4, pt: 10 }}>
         <Grid container height="30vh" spacing={2}>
-          {data.map((item) => (
-            <Item content={item} />
+          {toDoList.map((item) => (
+            <Item key={item.id} {...item} />
           ))}
         </Grid>
       </Box>
