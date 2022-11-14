@@ -8,13 +8,20 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { UserContextProvider } from "./Context";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <UserContextProvider>
-      <App />
-    </UserContextProvider>
+    <Auth0Provider
+      domain="dev-keiy2jhqsmnku1s1.us.auth0.com"
+      clientId="pWbnkjd9lEoCC3IqqwYwC2cRfYiA3yvA"
+      redirectUri={window.location.origin}
+    >
+      <UserContextProvider>
+        <App />
+      </UserContextProvider>
+    </Auth0Provider>
   </React.StrictMode>
 );
 

@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 const UserContext = React.createContext();
 
 const UserContextProvider = ({ children }) => {
+  const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
   const [toDoList, setTodoList] = useState([]);
 
   const [task, setTask] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState();
+  const isUser = isAuthenticated && user;
   const handleSubmit = () => {
-    if (!task) {
-      console.log("empty field");
-    }
-    if (task && isEditing) {
-      const newTask = toDoList.map((item) => {
-        if (item.id === editId) {
-          return { ...item, value: task };
-        }
-        return item;
-      });
-      setTodoList(newTask);
-      localStorage.setItem("taskList", JSON.stringify(newTask));
-      setOpen(false);
-    } else {
-      addTask(task);
-      setTask("");
+    if (isUser) {
+      if (!task) {
+        console.log("empty field");
+      }
+      if (task && isEditing) {
+        const newTask = toDoList.map((item) => {
+          if (item.id === editId) {
+            return { ...item, value: task };
+          }
+          return item;
+        });
+        setTodoList(newTask);
+        localStorage.setItem("taskList", JSON.stringify(newTask));
+        setOpen(false);
+      } else {
+        addTask(task);
+        setTask("");
+      }
     }
   };
   const addTask = (task) => {
@@ -33,31 +38,39 @@ const UserContextProvider = ({ children }) => {
     setTodoList(newList);
   };
   const deleteTask = (id) => {
-    const newList = toDoList.filter((task) => task.id !== id);
-    localStorage.setItem("taskList", JSON.stringify(newList));
-    setTodoList(newList);
+    if (isUser) {
+      const newList = toDoList.filter((task) => task.id !== id);
+      localStorage.setItem("taskList", JSON.stringify(newList));
+      setTodoList(newList);
+    }
   };
   const editTask = (id) => {
-    setOpen(true);
-    const task = toDoList.find((task) => task.id === id);
-    setTask(task.value);
-    setEditId(id);
-    setIsEditing(true);
+    if (isUser) {
+      setOpen(true);
+      const task = toDoList.find((task) => task.id === id);
+      setTask(task.value);
+      setEditId(id);
+      setIsEditing(true);
+    }
   };
 
   //BackDrop
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => {
-    setOpen(!open);
+    if (isUser) {
+      setOpen(!open);
+    }
   };
   const handleClose = () => {
-    if (isEditing) {
-      setIsEditing(false);
-      setTask("");
-    }
+    if (isUser) {
+      if (isEditing) {
+        setIsEditing(false);
+        setTask("");
+      }
 
-    setOpen(false);
+      setOpen(false);
+    }
   };
   useEffect(() => {
     const taskList = localStorage.getItem("taskList");
@@ -80,6 +93,7 @@ const UserContextProvider = ({ children }) => {
         handleClose,
         handleToggle,
         open,
+        isUser,
       }}
     >
       {children}
