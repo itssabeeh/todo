@@ -14,8 +14,7 @@ const UserContextProvider = ({ children }) => {
     if (isUser) {
       if (!task) {
         console.log("empty field");
-      }
-      if (task && isEditing) {
+      } else if (task && isEditing) {
         const newTask = toDoList.map((item) => {
           if (item.id === editId) {
             return { ...item, value: task };
@@ -28,6 +27,7 @@ const UserContextProvider = ({ children }) => {
       } else {
         addTask(task);
         setTask("");
+        setOpen(false);
       }
     }
   };
